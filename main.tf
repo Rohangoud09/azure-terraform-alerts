@@ -3,30 +3,30 @@ data "azurerm_resource_group" "rohan_rg" {
 }
 
 resource "azurerm_virtual_network" "rohan_vnet" {
-  name                = "rohan-vnet-task5-final"
-  address_space       = ["10.10.0.0/16"]
-  location            = data.azurerm_resource_group.rohan_rg.location
+  name                = "rohan-vnet-eastus-v2"
+  address_space       = ["10.20.0.0/16"]
+  location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 }
 
 resource "azurerm_subnet" "rohan_subnet" {
-  name                 = "rohan-subnet-task5-final"
+  name                 = "rohan-subnet-eastus-v2"
   resource_group_name  = data.azurerm_resource_group.rohan_rg.name
   virtual_network_name = azurerm_virtual_network.rohan_vnet.name
-  address_prefixes     = ["10.10.1.0/24"]
+  address_prefixes     = ["10.20.1.0/24"]
 }
 
 resource "azurerm_public_ip" "rohan_pip" {
-  name                = "rohan-public-ip-task5-final"
-  location            = data.azurerm_resource_group.rohan_rg.location
+  name                = "rohan-public-ip-eastus-v2"
+  location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   allocation_method   = "Static"
   sku                 = "Standard"
 }
 
 resource "azurerm_network_security_group" "rohan_nsg" {
-  name                = "rohan-nsg-task5-final"
-  location            = data.azurerm_resource_group.rohan_rg.location
+  name                = "rohan-nsg-eastus-v2"
+  location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 
   security_rule {
@@ -55,8 +55,8 @@ resource "azurerm_network_security_group" "rohan_nsg" {
 }
 
 resource "azurerm_network_interface" "rohan_nic" {
-  name                = "rohan-nic-task5-final"
-  location            = data.azurerm_resource_group.rohan_rg.location
+  name                = "rohan-nic-eastus-v2"
+  location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 
   ip_configuration {
@@ -78,9 +78,9 @@ resource "tls_private_key" "rohan_ssh" {
 }
 
 resource "azurerm_linux_virtual_machine" "rohan_vm" {
-  name                = "rohan-vm-task5-final"
+  name                = "rohan-vm-eastus-v2"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
-  location            = data.azurerm_resource_group.rohan_rg.location
+  location            = "East US"
   size                = "Standard_B1ls"
   admin_username      = "azureuser"
 
