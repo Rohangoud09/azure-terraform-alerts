@@ -1,4 +1,4 @@
-name: Terraform Azure Deployment
+name: Terraform Azure Monitoring Workflow
 
 on:
   push:
@@ -7,28 +7,35 @@ on:
 
 jobs:
   terraform:
+    name: Terraform CI
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
+      # Checkout Repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # Install Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
 
-    - name: Terraform Init
-      run: terraform init
+      # Verify Terraform Version
+      - name: Terraform Version
+        run: terraform version
 
-    - name: Terraform Validate
-      run: terraform validate
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform init
 
-    - name: Terraform Plan
-      run: terraform plan
+      # Format Check
+      - name: Terraform Format
+        run: terraform fmt -check
 
-    - name: Terraform Apply
-      run: terraform apply -auto-approve
+      # Validate Terraform Files
+      - name: Terraform Validate
+        run: terraform validate
+
+      # Terraform Plan
+      - name: Terraform Plan
+        run: terraform plan
