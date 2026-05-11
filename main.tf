@@ -3,21 +3,21 @@ data "azurerm_resource_group" "rohan_rg" {
 }
 
 resource "azurerm_virtual_network" "rohan_vnet" {
-  name                = "rohan-vnet-eastus-v3"
-  address_space       = ["10.30.0.0/16"]
+  name                = "rohan-vnet-eastus-alerts-v1"
+  address_space       = ["10.40.0.0/16"]
   location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 }
 
 resource "azurerm_subnet" "rohan_subnet" {
-  name                 = "rohan-subnet-eastus-v3"
+  name                 = "rohan-subnet-eastus-alerts-v1"
   resource_group_name  = data.azurerm_resource_group.rohan_rg.name
   virtual_network_name = azurerm_virtual_network.rohan_vnet.name
-  address_prefixes     = ["10.30.1.0/24"]
+  address_prefixes     = ["10.40.1.0/24"]
 }
 
 resource "azurerm_public_ip" "rohan_pip" {
-  name                = "rohan-public-ip-eastus-v3"
+  name                = "rohan-public-ip-eastus-alerts-v1"
   location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   allocation_method   = "Static"
@@ -25,7 +25,7 @@ resource "azurerm_public_ip" "rohan_pip" {
 }
 
 resource "azurerm_network_security_group" "rohan_nsg" {
-  name                = "rohan-nsg-eastus-v3"
+  name                = "rohan-nsg-eastus-alerts-v1"
   location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 
@@ -40,34 +40,10 @@ resource "azurerm_network_security_group" "rohan_nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
-
-  security_rule {
-    name                       = "Allow-HTTP"
-    priority                   = 1002
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "Allow-NodeJS"
-    priority                   = 1003
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "3000"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
 }
 
 resource "azurerm_network_interface" "rohan_nic" {
-  name                = "rohan-nic-eastus-v3"
+  name                = "rohan-nic-eastus-alerts-v1"
   location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 
@@ -85,7 +61,7 @@ resource "azurerm_network_interface_security_group_association" "rohan_assoc" {
 }
 
 resource "azurerm_linux_virtual_machine" "rohan_vm" {
-  name                = "rohan-vm-eastus-v3"
+  name                = "rohan-vm-eastus-alerts-v1"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   location            = "East US"
   size                = "Standard_B1ls"
@@ -109,4 +85,14 @@ resource "azurerm_linux_virtual_machine" "rohan_vm" {
     sku       = "22_04-lts"
     version   = "latest"
   }
+}
+
+resource "azurerm_virtual_machine_extension" "azure_monitor_agent" {
+  name                 = "AzureMonitorLinuxAgent"
+  virtual_machine_id   = azurerm_linux_virtual_machine.rohan_vm.id
+  publisher            = "Microsoft.Azure.Monitor"
+  type                 = "AzureMonitorLinuxAgent"
+  type_handler_version = "1.0"
+
+  auto_upgrade_minor_version = true
 }
