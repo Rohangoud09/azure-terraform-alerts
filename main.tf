@@ -3,21 +3,21 @@ data "azurerm_resource_group" "rohan_rg" {
 }
 
 resource "azurerm_virtual_network" "rohan_vnet" {
-  name                = "rohan-vnet-eastus-v2"
-  address_space       = ["10.20.0.0/16"]
+  name                = "rohan-vnet-eastus-v3"
+  address_space       = ["10.30.0.0/16"]
   location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 }
 
 resource "azurerm_subnet" "rohan_subnet" {
-  name                 = "rohan-subnet-eastus-v2"
+  name                 = "rohan-subnet-eastus-v3"
   resource_group_name  = data.azurerm_resource_group.rohan_rg.name
   virtual_network_name = azurerm_virtual_network.rohan_vnet.name
-  address_prefixes     = ["10.20.1.0/24"]
+  address_prefixes     = ["10.30.1.0/24"]
 }
 
 resource "azurerm_public_ip" "rohan_pip" {
-  name                = "rohan-public-ip-eastus-v2"
+  name                = "rohan-public-ip-eastus-v3"
   location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   allocation_method   = "Static"
@@ -25,7 +25,7 @@ resource "azurerm_public_ip" "rohan_pip" {
 }
 
 resource "azurerm_network_security_group" "rohan_nsg" {
-  name                = "rohan-nsg-eastus-v2"
+  name                = "rohan-nsg-eastus-v3"
   location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 
@@ -52,10 +52,22 @@ resource "azurerm_network_security_group" "rohan_nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
+  security_rule {
+    name                       = "Allow-NodeJS"
+    priority                   = 1003
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3000"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
 resource "azurerm_network_interface" "rohan_nic" {
-  name                = "rohan-nic-eastus-v2"
+  name                = "rohan-nic-eastus-v3"
   location            = "East US"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 
@@ -72,28 +84,19 @@ resource "azurerm_network_interface_security_group_association" "rohan_assoc" {
   network_security_group_id = azurerm_network_security_group.rohan_nsg.id
 }
 
-resource "tls_private_key" "rohan_ssh" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
 resource "azurerm_linux_virtual_machine" "rohan_vm" {
-  name                = "rohan-vm-eastus-v2"
+  name                = "rohan-vm-eastus-v3"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   location            = "East US"
   size                = "Standard_B1ls"
   admin_username      = "azureuser"
+  admin_password      = "Rohan@123456"
 
   network_interface_ids = [
     azurerm_network_interface.rohan_nic.id
   ]
 
-  disable_password_authentication = true
-
-  admin_ssh_key {
-    username   = "azureuser"
-    public_key = tls_private_key.rohan_ssh.public_key_openssh
-  }
+  disable_password_authentication = false
 
   os_disk {
     caching              = "ReadWrite"

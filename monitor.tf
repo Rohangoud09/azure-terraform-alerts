@@ -1,5 +1,5 @@
 resource "azurerm_monitor_action_group" "rohan_action_group" {
-  name                = "rohan-action-group-eastus-v2"
+  name                = "rohan-action-group-eastus-v3"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   short_name          = "rohanag"
 
@@ -10,7 +10,7 @@ resource "azurerm_monitor_action_group" "rohan_action_group" {
 }
 
 resource "azurerm_monitor_metric_alert" "cpu_alert" {
-  name                = "high-cpu-alert-eastus-v2"
+  name                = "high-cpu-alert-eastus-v3"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   scopes              = [azurerm_linux_virtual_machine.rohan_vm.id]
 
