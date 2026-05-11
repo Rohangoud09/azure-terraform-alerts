@@ -1,5 +1,5 @@
 resource "azurerm_monitor_action_group" "rohan_action_group" {
-  name                = "rohan-action-group-existingvm-v1"
+  name                = "rohan-action-group-existingvm-v2"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   short_name          = "rohanag"
 
@@ -10,9 +10,9 @@ resource "azurerm_monitor_action_group" "rohan_action_group" {
 }
 
 resource "azurerm_monitor_metric_alert" "cpu_alert" {
-  name                = "high-cpu-alert-existingvm-v1"
+  name                = "high-cpu-alert-existingvm-v2"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
-  scopes              = [data.azurerm_linux_virtual_machine.existing_vm.id]
+  scopes              = [data.azurerm_resources.existing_vm.resources[0].id]
 
   description = "CPU usage alert"
   severity    = 2
@@ -33,9 +33,9 @@ resource "azurerm_monitor_metric_alert" "cpu_alert" {
 }
 
 resource "azurerm_monitor_metric_alert" "memory_alert" {
-  name                = "high-memory-alert-existingvm-v1"
+  name                = "high-memory-alert-existingvm-v2"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
-  scopes              = [data.azurerm_linux_virtual_machine.existing_vm.id]
+  scopes              = [data.azurerm_resources.existing_vm.resources[0].id]
 
   description = "Memory usage alert"
   severity    = 2
@@ -56,9 +56,9 @@ resource "azurerm_monitor_metric_alert" "memory_alert" {
 }
 
 resource "azurerm_monitor_metric_alert" "disk_alert" {
-  name                = "high-disk-alert-existingvm-v1"
+  name                = "high-disk-alert-existingvm-v2"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
-  scopes              = [data.azurerm_linux_virtual_machine.existing_vm.id]
+  scopes              = [data.azurerm_resources.existing_vm.resources[0].id]
 
   description = "Disk usage alert"
   severity    = 2
