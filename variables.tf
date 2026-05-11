@@ -1,1 +1,3 @@
-# No variables required
+variable "subscription_id" {
+  type = string
+}
