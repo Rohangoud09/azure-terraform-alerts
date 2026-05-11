@@ -1,7 +1,7 @@
 resource "azurerm_monitor_action_group" "rohan_action_group" {
-  name                = "rohan-action-group-existingvm-v3"
+  name                = "rohan-action-group-final-v10"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
-  short_name          = "rohanv3"
+  short_name          = "rohan10"
 
   email_receiver {
     name          = "send-email"
@@ -14,7 +14,7 @@ resource "azurerm_monitor_action_group" "rohan_action_group" {
 # =========================
 
 resource "azurerm_monitor_metric_alert" "cpu_alert" {
-  name                = "high-cpu-alert-existingvm-v2"
+  name                = "high-cpu-alert-final-v10"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   scopes              = [data.azurerm_resources.existing_vm.resources[0].id]
 
@@ -37,7 +37,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert" {
 }
 
 resource "azurerm_monitor_metric_alert" "memory_alert" {
-  name                = "high-memory-alert-existingvm-v2"
+  name                = "high-memory-alert-final-v10"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   scopes              = [data.azurerm_resources.existing_vm.resources[0].id]
 
@@ -60,7 +60,7 @@ resource "azurerm_monitor_metric_alert" "memory_alert" {
 }
 
 resource "azurerm_monitor_metric_alert" "disk_alert" {
-  name                = "high-disk-alert-existingvm-v2"
+  name                = "high-disk-alert-final-v10"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   scopes              = [data.azurerm_resources.existing_vm.resources[0].id]
 
@@ -87,7 +87,7 @@ resource "azurerm_monitor_metric_alert" "disk_alert" {
 # =========================
 
 resource "azurerm_monitor_metric_alert" "cpu_critical_alert" {
-  name                = "critical-cpu-alert-existingvm-v2"
+  name                = "critical-cpu-alert-final-v10"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   scopes              = [data.azurerm_resources.existing_vm.resources[0].id]
 
@@ -110,7 +110,7 @@ resource "azurerm_monitor_metric_alert" "cpu_critical_alert" {
 }
 
 resource "azurerm_monitor_metric_alert" "memory_critical_alert" {
-  name                = "critical-memory-alert-existingvm-v2"
+  name                = "critical-memory-alert-final-v10"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   scopes              = [data.azurerm_resources.existing_vm.resources[0].id]
 
@@ -133,7 +133,7 @@ resource "azurerm_monitor_metric_alert" "memory_critical_alert" {
 }
 
 resource "azurerm_monitor_metric_alert" "disk_critical_alert" {
-  name                = "critical-disk-alert-existingvm-v2"
+  name                = "critical-disk-alert-final-v10"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   scopes              = [data.azurerm_resources.existing_vm.resources[0].id]
 
