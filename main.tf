@@ -3,21 +3,21 @@ data "azurerm_resource_group" "rohan_rg" {
 }
 
 resource "azurerm_virtual_network" "rohan_vnet" {
-  name                = "rohan-vnet-new"
+  name                = "rohan-vnet-task5"
   address_space       = ["10.1.0.0/16"]
   location            = data.azurerm_resource_group.rohan_rg.location
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 }
 
 resource "azurerm_subnet" "rohan_subnet" {
-  name                 = "rohan-subnet-new"
+  name                 = "rohan-subnet-task5"
   resource_group_name  = data.azurerm_resource_group.rohan_rg.name
   virtual_network_name = azurerm_virtual_network.rohan_vnet.name
   address_prefixes     = ["10.1.1.0/24"]
 }
 
 resource "azurerm_public_ip" "rohan_pip" {
-  name                = "rohan-public-ip-new"
+  name                = "rohan-public-ip-task5"
   location            = data.azurerm_resource_group.rohan_rg.location
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   allocation_method   = "Static"
@@ -25,7 +25,7 @@ resource "azurerm_public_ip" "rohan_pip" {
 }
 
 resource "azurerm_network_security_group" "rohan_nsg" {
-  name                = "rohan-nsg-new"
+  name                = "rohan-nsg-task5"
   location            = data.azurerm_resource_group.rohan_rg.location
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 
@@ -55,7 +55,7 @@ resource "azurerm_network_security_group" "rohan_nsg" {
 }
 
 resource "azurerm_network_interface" "rohan_nic" {
-  name                = "rohan-nic-new"
+  name                = "rohan-nic-task5"
   location            = data.azurerm_resource_group.rohan_rg.location
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
 
@@ -78,15 +78,17 @@ resource "tls_private_key" "rohan_ssh" {
 }
 
 resource "azurerm_linux_virtual_machine" "rohan_vm" {
-  name                = "rohan-vm-new"
+  name                = "rohan-vm-task5"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   location            = data.azurerm_resource_group.rohan_rg.location
   size                = "Standard_B1s"
   admin_username      = "azureuser"
 
   network_interface_ids = [
-    azurerm_network_interface.rohan_nic.id
+    azurerm_network_interface.rohan_nic.id,
   ]
+
+  disable_password_authentication = true
 
   admin_ssh_key {
     username   = "azureuser"
@@ -103,23 +105,5 @@ resource "azurerm_linux_virtual_machine" "rohan_vm" {
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts"
     version   = "latest"
-  }
-
-  disable_password_authentication = true
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt update",
-      "sudo apt install nginx -y",
-      "sudo systemctl start nginx",
-      "sudo systemctl enable nginx"
-    ]
-
-    connection {
-      type        = "ssh"
-      user        = "azureuser"
-      private_key = tls_private_key.rohan_ssh.private_key_pem
-      host        = self.public_ip_address
-    }
   }
 }
