@@ -81,7 +81,7 @@ resource "azurerm_linux_virtual_machine" "rohan_vm" {
   name                = "rohan-vm-task5-final"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
   location            = data.azurerm_resource_group.rohan_rg.location
-  size                = "Standard_B1s"
+  size                = "Standard_B1ls"
   admin_username      = "azureuser"
 
   network_interface_ids = [
