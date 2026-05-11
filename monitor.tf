@@ -1,7 +1,7 @@
 resource "azurerm_monitor_action_group" "rohan_action_group" {
-  name                = "rohan-action-group-existingvm-v2"
+  name                = "rohan-action-group-existingvm-v3"
   resource_group_name = data.azurerm_resource_group.rohan_rg.name
-  short_name          = "rohanag"
+  short_name          = "rohanv3"
 
   email_receiver {
     name          = "send-email"
